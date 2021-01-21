@@ -1,5 +1,5 @@
 
-name: 同步lxk0301/jd_scripts
+name: repo-sync
 on:
   schedule:
     - cron: '0 */6 * * *'
@@ -23,7 +23,7 @@ jobs:
           source_branch: "master"
           destination_branch: "master"
           github_token: ${{ secrets.PAT }}        
-  fix-jdCookie:
+  fix-env:
     needs: repo-sync
     env:
       PAT: ${{ secrets.PAT }}      
@@ -32,11 +32,10 @@ jobs:
     - uses: actions/checkout@v2
       with:
         ref: master
-    - name: '运行 【修改jdCookie】'
+    - name: 'Apply fix-env changes'
       run: |
-             sed -i '/\\x47\\x49\\x54\\x48\\x55\\x42/d' jdCookie.js
+             sed -i 's/'GITHUB'/'BUHTIG'/g' *.js
     - uses: stefanzweifel/git-auto-commit-action@v4
       with:
-        commit_message: Apply fix-jdCookie changes
+        commit_message: Apply fix-env changes
         branch: master
-        file_pattern: jdCookie.js
